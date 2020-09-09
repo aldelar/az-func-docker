@@ -8,10 +8,15 @@ func new --name score --template "HTTP trigger"
 
 # Create Azure resources for deployment & deploy function
 az group create --name az-func-docker --location westus2
+
 az storage account create --name azfuncdocker --location westus2 --resource-group az-func-docker --sku Standard_LRS
+
 az functionapp plan create --resource-group az-func-docker --name azfuncdocker --location westus2 --number-of-workers 1 --sku P1V2 --is-linux
+
 az functionapp create --name az-func-docker --storage-account azfuncdocker --resource-group az-func-docker --plan azfuncdocker --deployment-container-image-name <myregistry>.azurecr.io/az-func-docker:latest --functions-version 3
+
 az storage account show-connection-string --resource-group az-func-docker --name azfuncdocker --query connectionString --output tsv
+
 az functionapp config appsettings set --name az-func-docker --resource-group az-func-docker --settings AzureWebJobsStorage="..(copy connection string from previous command).."
 
 # Enable Continuous deployment & Return CI_CD_URL
