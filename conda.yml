@@ -1,0 +1,6 @@
+name: az-func-docker
+channels:
+  - defaults
+dependencies:
+  - pandas
+  - pip
