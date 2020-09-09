@@ -7,7 +7,8 @@ import pandas as pd
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    # test conda setup of libraries in Docker based Functions
+    # validates that the pandas library installed via conda
+    # in the custom docker container is properly located
     df = pd.DataFrame()
 
     # function code here
