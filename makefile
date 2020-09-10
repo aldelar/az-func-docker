@@ -1,5 +1,5 @@
 # Define apps and registry
-REGISTRY 		?=ailabml1b51bd50.azurecr.io
+REGISTRY 		?=
 IMAGE_NAME		?=az-func-docker
 IMAGE_VERSION	?=latest
 
