@@ -1,0 +1,13 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "FUNCTIONS_WORKER_RUNTIME": "python",
+      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+      "TENANT_ID": "",
+      "SERVICE_PRINCIPAL_ID": "",
+      "SERVICE_PRINCIPAL_PASSWORD": "",
+      "SUBSCRIPTION_ID": "",
+      "AML_RESOURCE_GROUP": "",
+      "AML_WORKSPACE_NAME": ""
+    }
+  }

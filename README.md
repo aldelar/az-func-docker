@@ -66,6 +66,8 @@ Click on 'Configuration' and then create a new 'Application Setting' for each se
 
 Click 'Save'.
 
+NOTE: see 'local.settings.template.json' as a reference file. Your local.settings.json should look like this with filled in values for all the parameters defined coming from your Azure environment.
+
 # Build and Test
 
 # Login Docker desktop to your registry
