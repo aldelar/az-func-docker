@@ -37,8 +37,6 @@ models = {}
 
 #
 input_sample = pd.DataFrame({"trade_date": pd.Series(["2020-09-01T00:00:00.000Z"], dtype="datetime64[ns]")})
-
-#
 #@input_schema('data', PandasParameterType(input_sample, enforce_shape=False))
 def main(req: func.HttpRequest) -> func.HttpResponse:
     
@@ -93,15 +91,8 @@ def read_param(req,param_name,param_default):
 def get_model(model_name,model_version):
     logging.info(f'get_model({model_name,model_version})')
     if not model_version in models:
-        #models[model_version] = load_model_from_local()
         models[model_version] = load_model_from_registry(model_name,model_version)
     return models[model_version]
-
-# load_model_from_local
-def load_model_from_local():
-    logging.info(f' >> load_model_from_local() ...')
-    model_path = 'model.pkl'
-    return load_model_from_filesystem(model_path)
 
 # load_model_from_registry
 def load_model_from_registry(model_name,model_version):
@@ -109,17 +100,7 @@ def load_model_from_registry(model_name,model_version):
     try:
         aml_model = Model(workspace, name=model_name, version=model_version)
         model_path = aml_model.download(target_dir='.',exist_ok=True)
-        return load_model_from_filesystem(model_path)
-    except Exception as e:
-        logging.error(e)
-        raise
-
-# load_model_from_filesystem
-def load_model_from_filesystem(model_path):
-    try:
-        model = joblib.load(model_path)
-        logging.info(f' >> load_model_from_filesystem({model_path}) -> type({model})')
-        return model
+        return joblib.load(model_path)
     except Exception as e:
         logging.error(e)
         raise

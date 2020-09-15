@@ -1,10 +1,9 @@
-# Azure Function
+# Ignore local Function settings
 local.settings.json
-# Azure ML
-config.json
-model.pkl
-# Docker
 local.settings.env
+
+# Ignore temp model downloaded from AML Model registry
+model.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
