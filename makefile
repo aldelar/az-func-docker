@@ -1,6 +1,6 @@
 # Define apps and registry
-REGISTRY 		?=
-IMAGE_NAME		?=az-func-docker
+REGISTRY 		?=azfuncdocker.azurecr.io
+IMAGE_NAME		?=sce-az-func-docker
 IMAGE_VERSION	?=latest
 
 # Docker image build and push setting
@@ -24,3 +24,11 @@ clean-dangling:
 .PHONY: push
 push:
 	$(DOCKER) push $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION)
+
+# run-docker-local
+.PHONY: run-docker-local
+run-docker-local: build make-docker-env docker-local
+make-docker-env:
+	python generate_docker_env.py
+docker-local:
+	$(DOCKER) run -p 7071:80 -it --env-file local.settings.env $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION)

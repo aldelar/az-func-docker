@@ -2,6 +2,12 @@
   "IsEncrypted": false,
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "python",
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "TENANT_ID": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+    "SERVICE_PRINCIPAL_ID": "896cb859-6adb-4b15-bb90-81a3c0f1b547",
+    "SERVICE_PRINCIPAL_PASSWORD": "f-0St-E~md.V-mWeBN9XZISH9WW8-K84z0",
+    "SUBSCRIPTION_ID": "c5ec24ce-9c5f-4da2-bf12-9ca8e9758d60",
+    "AML_RESOURCE_GROUP": "azure-ml-workshop",
+    "AML_WORKSPACE_NAME": "agd-mlws"
   }
 }

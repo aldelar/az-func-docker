@@ -1,40 +1,86 @@
 # az-func-docker
 
-## Steps to rebuild this project
+# Setup Code
 
-# Create Function code locally
+## Create Function code locally
 func init az-func-docker --worker-runtime python --docker
 func new --name score --template "HTTP trigger"
 
 # Create Azure resources for deployment & deploy function
-az group create --name az-func-docker --location westus2
 
-az storage account create --name azfuncdocker --location westus2 --resource-group az-func-docker --sku Standard_LRS
+## Resource Group
+az group create -n az-func-docker --location westus2
 
-az functionapp plan create --resource-group az-func-docker --name azfuncdocker --location westus2 --number-of-workers 1 --sku P1V2 --is-linux
+## Container Registry
+az acr create -n azfuncdocker -g az-func-docker --sku Basic --admin-enabled true
 
-az functionapp create --name az-func-docker --storage-account azfuncdocker --resource-group az-func-docker --plan azfuncdocker --deployment-container-image-name <myregistry>.azurecr.io/az-func-docker:latest --functions-version 3
+## Storage Account
+az storage account create -n azfuncdocker -g az-func-docker --location westus2 --sku Standard_LRS
 
-az storage account show-connection-string --resource-group az-func-docker --name azfuncdocker --query connectionString --output tsv
+## App Service Plan
+az functionapp plan create -n azfuncdocker -g az-func-docker  --location westus2 --number-of-workers 1 --sku P1V2 --is-linux
 
-az functionapp config appsettings set --name az-func-docker --resource-group az-func-docker --settings AzureWebJobsStorage="..(copy connection string from previous command).."
+## Azure Function
+az functionapp create -n azfuncdocker -g az-func-docker --storage-account azfuncdocker --plan azfuncdocker --deployment-container-image-name azfuncdocker.azurecr.io/az-func-docker:latest --functions-version 3
 
-# Enable Continuous deployment & Return CI_CD_URL
-az functionapp deployment container config --enable-cd --query CI_CD_URL --output tsv --name 
-az-func-docker --resource-group az-func-docker
+## Enable Continuous deployment & Return CI_CD_URL
+az functionapp deployment container config -n azfuncdocker -g az-func-docker --enable-cd --query CI_CD_URL --output tsv
 
-# Copy the CI_CD_URL and set a new webhook in your Azure Container Registry (type 'Push')
+## Copy the CI_CD_URL and set a new webhook in your Azure Container Registry (type 'Push')
 
-# Enable Kudu/SSH connection to the container
+## Enable Kudu/SSH connection to the container
 Update the Dockerfile to use the '-appservice' version of the base image
 
 Go to this URL to access the KUDU environment: https://az-func-docker.scm.azurewebsites.net/
 
-# Build the docker image
+# Azure ML Connectivity
+## SEE: https://github.com/Azure/MachineLearningNotebooks/blob/master/how-to-use-azureml/manage-azureml-service/authentication-in-azureml/authentication-in-azureml.ipynb
+
+## Create an app registration called 'azfuncdocker' from the Azure Active Directory resource
+
+## Create a Secret named 'azfuncdocker' in this app using the Active Directory resource pane.
+
+Copy the secret value before leaving the control pane. Save the value under "SERVICE_PRINCIPAL_PASSWORD" in local.settings.json
+
+Copy the Tenant ID from the app overview pane into 'TENANT_ID' in local.settings.json
+
+Copy the Application ID from the app overview pane into 'SERVICE_PRINCIPAL_ID' in local.settings.json
+
+Setup your 'SUBSCRIPTION_ID' in the settings file.
+
+Setup your Azure ML Workspace name and resource group under the 'AML_WORKSPACE_NAME' and 'AML_RESOURCE_GROUP' settings.
+
+# Azure ML Workspace connectivity
+
+Go to your Azure ML Workspace control pane in the Azure portal, and click on 'Access Control', then 'Add a role assignment':
+
+Role: Reader
+Select: azfuncdocker
+
+Click Save. This provides the service principal the Reader role to your workspace so we can access the AML Model registry.
+
+# Replicate the local.settings.json configuration in the Azure Function
+
+Go to the Azure portal and open up the Azure Function.
+Click on 'Configuration' and then create a new 'Application Setting' for each setting item created in the steps above. This should represent 6 new settings.
+
+Click 'Save'.
+
+# Build and Test
+
+# Login Docker desktop to your registry
+docker login azfuncdocker.azurecr.io
+
+You can find the username and password in the Azure portal registry panel, under 'Access Keys'.
+
+## Build the docker image
 make build
 
-# Test the image locally
-docker run -p 8080:80 -it ailabml1b51bd50.azurecr.io/az-func-docker:latest
-
-# Push the image to the Azure Registry, which will trigger a reboot of the Azure function against the new image
+## Push the image to the Azure Registry, which will trigger a reboot of the Azure function against the new image
 make push
+
+## Test the image locally: Azure Function runtime
+func start
+
+## Test the image locally: Docker Desktop
+make run-docker-local

@@ -1,3 +1,11 @@
+# Azure Function
+local.settings.json
+# Azure ML
+config.json
+model.pkl
+# Docker
+local.settings.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
