@@ -1,6 +1,6 @@
 # Define apps and registry
 REGISTRY 		?=azfuncdocker.azurecr.io
-IMAGE_NAME		?=sce-az-func-docker
+IMAGE_NAME		?=az-func-docker
 IMAGE_VERSION	?=latest
 
 # Docker image build and push setting
