@@ -1,5 +1,13 @@
 # az-func-docker
 
+This repo demonstrates how to create a python Azure Function leveraging a runtime environment based on a custom docker container.
+
+The function itself also connects to an Azure ML workspace Model registry to download at runtime an ML model and offer a scoring function as a web service. A Service Principal is used to establish the authentication to Azure ML as a Reader role.
+
+This setup enables full control of the runtime environment and therefore the deployment of any type of ML model to Azure Functions as a PaaS ML endpoint.
+
+The conda.yaml file is basically taken almost as is from the Azure ML service output directory of an Auto ML run.
+
 # Setup Code
 
 ## Create Function code locally
